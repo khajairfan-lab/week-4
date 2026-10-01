@@ -1,0 +1,258 @@
+
+
+week-4(b)
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Named Routes Demo',
+      debugShowCheckedModeBanner: false,
+      initialRoute: '/',
+
+      routes: {
+        '/': (context) => const HomePage(),
+        '/about': (context) => const AboutPage(),
+      },
+
+      onGenerateRoute: (settings) {
+        if (settings.name == '/details') {
+          final args = settings.arguments as DetailsPageArguments;
+
+          return MaterialPageRoute(
+            builder: (context) => DetailsPage(
+              title: args.title,
+              message: args.message,
+            ),
+          );
+        }
+
+        return null;
+      },
+
+      onUnknownRoute: (settings) {
+        return MaterialPageRoute(
+          builder: (context) => const UnknownPage(),
+        );
+      },
+    );
+  }
+}
+
+// ---------------- HOME PAGE ----------------
+
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Home Page'),
+        backgroundColor: Colors.teal,
+        foregroundColor: Colors.white,
+      ),
+
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pushNamed(
+                    context,
+                    '/about',
+                  );
+                },
+                child: const Text('Go to About Page'),
+              ),
+
+              const SizedBox(height: 15),
+
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pushNamed(
+                    context,
+                    '/details',
+                    arguments: const DetailsPageArguments(
+                      title: 'Details Page',
+                      message: 'This is a message from Home Page!',
+                    ),
+                  );
+                },
+                child: const Text(
+                  'Go to Details Page with Arguments',
+                ),
+              ),
+
+              const SizedBox(height: 15),
+
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pushNamed(
+                    context,
+                    '/undefined',
+                  );
+                },
+                child: const Text(
+                  'Go to Undefined Route',
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ---------------- ABOUT PAGE ----------------
+
+class AboutPage extends StatelessWidget {
+  const AboutPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('About Page'),
+        backgroundColor: Colors.deepPurple,
+        foregroundColor: Colors.white,
+      ),
+
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text(
+              'This is the About Page',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+
+            const SizedBox(height: 20),
+
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('Go Back'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ---------------- DETAILS PAGE ----------------
+
+class DetailsPage extends StatelessWidget {
+  final String title;
+  final String message;
+
+  const DetailsPage({
+    super.key,
+    required this.title,
+    required this.message,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(title),
+        backgroundColor: Colors.orange,
+      ),
+
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              message,
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+
+            const SizedBox(height: 20),
+
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('Back to Home'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ---------------- ARGUMENT CLASS ----------------
+
+class DetailsPageArguments {
+  final String title;
+  final String message;
+
+  const DetailsPageArguments({
+    required this.title,
+    required this.message,
+  });
+}
+
+// ---------------- UNKNOWN PAGE ----------------
+
+class UnknownPage extends StatelessWidget {
+  const UnknownPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('404 - Not Found'),
+        backgroundColor: Colors.red,
+        foregroundColor: Colors.white,
+      ),
+
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text(
+              "Oops! The page you requested doesn't exist.",
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+
+            const SizedBox(height: 20),
+
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('Go Back'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
